@@ -3,16 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salut Simplu cu Upload!</title>
+    <title>Upload Simplu în Azure</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
 </head>
 <body>
     <div class="container">
-        <h1 class="main-title">Salut, Lume!</h1>
-        <p class="subtitle">O aplicație simplă și curată.</p>
-        <p class="location">Trimis din: Iași, România.</p>
+        <h1 class="main-title">Încărcare Fișier în Azure</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
         <hr class="separator">
+
+        <form method="POST" enctype="multipart/form-data" action="{{ url_for('home') }}" class="upload-form">
+             <label for="file_input">Selectează o imagine:</label>
+             <input type="file" name="file_to_upload" id="file_input" accept="image/*" required> <button type="submit">Încarcă Fișierul</button>
+        </form>
 
     </div>
 </body>
