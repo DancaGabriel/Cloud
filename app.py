@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 
 CONNECTION_STRING = os.environ.get('AZURE_STORAGE_CONNECTION_STRING')
-TARGET_CONTAINER_NAME = "imagini" 
+TARGET_CONTAINER_NAME = "uploads" 
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
