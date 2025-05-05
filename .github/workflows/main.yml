@@ -1,0 +1,63 @@
+# .github/workflows/main.yml
+
+name: Build and Deploy Python Flask App to Azure Web App cloud-application
+
+# Declanșează workflow-ul la push pe ramura 'main'
+on:
+  push:
+    branches:
+      - main 
+  workflow_dispatch: # Permite rularea manuală din tab-ul Actions GitHub
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # Rulează pe un server Linux în GitHub Actions
+
+    steps:
+    # Pasul 1: Obține codul din repozitoriu
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v4
+
+    # Pasul 2: Configurează versiunea de Python
+    # !!! Asigură-te că versiunea de aici ('3.9') se potrivește cu cea aleasă în Azure App Service !!!
+    - name: Set up Python version
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' # Poți schimba la 3.10, 3.11 etc., dacă ai ales altceva în Azure
+
+    # Pasul 3: Instalează dependențele Python
+    - name: Create and start virtual environment
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    # Pasul 4: (Opțional) Adaugă pași de testare sau verificare a codului aici
+    # - name: Test with pytest (Exemplu)
+    #   run: |
+    #     pip install pytest
+    #     pytest
+
+    # Pasul 5: Autentificare în Azure folosind secretul stocat
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }} # Folosește secretul creat mai devreme
+
+    # Pasul 6: Implementează aplicația în Azure Web App
+    - name: 'Deploy to Azure Web App'
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: 'cloud-application' # Numele aplicației tale Azure specificat anterior
+        package: '.' # Implementează conținutul directorului curent (rădăcina proiectului)
+        # Comanda de startup ar trebui preluată din configurarea Azure App Service
+        # Dar o poți specifica explicit aici dacă este necesar:
+        # startup-command: 'gunicorn --bind=0.0.0.0 --timeout 600 app:app'
+
+    # Pasul 7: (Opțional) Deconectare de la Azure
+    - name: Logout from Azure
+      run: |
+        az logout
+        az cache purge
+        az account clear
