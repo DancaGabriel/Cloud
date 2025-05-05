@@ -3,17 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salut Simplu cu Upload!</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1 class="main-title">Bafta baieti</h1>
+    <div class="container">    
+
+        <hr class="separator">
+
+        <h2 class="upload-heading">Încărcare Fișier în Bucket ('uploads')</h2>
+
+        <form method="post" action="/upload" enctype="multipart/form-data" class="upload-form">
+            <div>
+                <label for="file" style="margin-right: 10px;">Selectează fișier:</label>
+                <input type="file" name="file" id="file" required class="file-input">
+            </div>
+            <button type="submit" class="submit-button">Încarcă</button>
+        </form>
 
         <hr class="separator">
 
         <div class="db-check-link">
-            <a href="/db_check">Verifică Conexiune Bucket ('uploads')</a>
-       </div>
+             <a href="/db_check">Verifică Conexiune Bucket ('uploads')</a>
+        </div>
 
     </div>
 </body>
