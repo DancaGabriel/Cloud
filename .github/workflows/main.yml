@@ -1,26 +1,19 @@
-# .github/workflows/main.yml
+name: Build and Deploy Cloud Project ( FII )
 
-name: Build and Deploy Python Flask App to Azure Web App cloud-application
-
-# Declanșează workflow-ul la push pe ramura 'main'
 on:
   push:
     branches:
       - main 
-  workflow_dispatch: # Permite rularea manuală din tab-ul Actions GitHub
+  workflow_dispatch: 
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest # Rulează pe un server Linux în GitHub Actions
-
+    runs-on: ubuntu-latest 
     steps:
-    # Pasul 1: Obține codul din repozitoriu
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v4
 
-    # Pasul 2: Configurează versiunea de Python
-    # !!! Asigură-te că versiunea de aici ('3.9') se potrivește cu cea aleasă în Azure App Service !!!
-    - name: Set up Python version
+    - name: Python version
       uses: actions/setup-python@v5
       with:
         python-version: '3.11' # Poți schimba la 3.10, 3.11 etc., dacă ai ales altceva în Azure
@@ -43,7 +36,7 @@ jobs:
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }} # Folosește secretul creat mai devreme
+        creds: ${{ secrets.AZURE_CREDENTIALS }} 
 
     # Pasul 6: Implementează aplicația în Azure Web App
     - name: 'Deploy to Azure Web App'
