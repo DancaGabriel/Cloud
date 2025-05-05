@@ -16,9 +16,8 @@ jobs:
     - name: Python version
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11' # Poți schimba la 3.10, 3.11 etc., dacă ai ales altceva în Azure
+        python-version: '3.11' 
 
-    # Pasul 3: Instalează dependențele Python
     - name: Create and start virtual environment
       run: |
         python -m venv venv
@@ -26,29 +25,23 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt
 
-    # Pasul 4: (Opțional) Adaugă pași de testare sau verificare a codului aici
     # - name: Test with pytest (Exemplu)
     #   run: |
     #     pip install pytest
     #     pytest
 
-    # Pasul 5: Autentificare în Azure folosind secretul stocat
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }} 
 
-    # Pasul 6: Implementează aplicația în Azure Web App
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v3
       with:
-        app-name: 'cloud-application' # Numele aplicației tale Azure specificat anterior
-        package: '.' # Implementează conținutul directorului curent (rădăcina proiectului)
-        # Comanda de startup ar trebui preluată din configurarea Azure App Service
-        # Dar o poți specifica explicit aici dacă este necesar:
-        # startup-command: 'gunicorn --bind=0.0.0.0 --timeout 600 app:app'
+        app-name: 'cloud-application' 
+        package: '.' 
+      '
 
-    # Pasul 7: (Opțional) Deconectare de la Azure
     - name: Logout from Azure
       run: |
         az logout
