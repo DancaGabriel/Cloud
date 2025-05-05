@@ -25,10 +25,8 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt
 
-    # - name: Test with pytest (Exemplu)
-    #   run: |
-    #     pip install pytest
-    #     pytest
+    - name: Testing
+      run: pytest
 
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
