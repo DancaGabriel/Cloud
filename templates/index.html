@@ -3,111 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask App cu API Microsoft</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1, h2 { color: #0078D4; }
-        textarea { width: calc(100% - 22px); padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; min-height: 80px; }
-        select, button { padding: 10px 15px; margin-bottom:10px; margin-right: 5px; border: 1px solid #ccc; border-radius: 4px; }
-        button { background-color: #0078D4; color: white; cursor: pointer; }
-        button:hover { background-color: #005a9e; }
-        .result-box { margin-top: 15px; padding: 15px; background: #e9f5ff; border: 1px solid #b3d7f2; border-radius: 4px; }
-        .error { color: red; font-weight: bold; padding: 10px; background-color: #ffe0e0; border: 1px solid red; border-radius: 4px;}
-        .loading { font-style: italic; color: #777; }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>Integrare API Microsoft</h1>
-        <p>Această pagină demonstrează integrarea cu Microsoft Translator API.</p>
+        <h1 class="main-title">Bafta baieti</h1>
 
-        <hr>
+        <hr class="separator">
 
-        <h2>Traducere Text (Microsoft Translator)</h2>
-        <form id="translateForm">
-            <div>
-                <label for="textToTranslate">Text de tradus:</label>
-                <textarea id="textToTranslate" name="textToTranslate" placeholder="Introduceți textul aici..." required></textarea>
-            </div>
-            <div>
-                <label for="sourceLang">Din (opțional, detectează automat):</label>
-                <select id="sourceLang" name="sourceLang">
-                    <option value="">Detectează automat</option>
-                    <option value="en">Engleză</option>
-                    <option value="ro">Română</option>
-                    <option value="fr">Franceză</option>
-                    <option value="de">Germană</option>
-                    <option value="es">Spaniolă</option>
-                    </select>
-            </div>
-            <div>
-                <label for="targetLang">În:</label>
-                <select id="targetLang" name="targetLang">
-                    <option value="en">Engleză</option>
-                    <option value="ro">Română</option>
-                    <option value="fr">Franceză</option>
-                    <option value="de">Germană</option>
-                    <option value="es">Spaniolă</option>
-                    </select>
-            </div>
-            <button type="submit">Traduce</button>
-        </form>
 
-        <div id="translationResult" class="result-box" style="display:none;">
-            </div>
     </div>
-
-    <script>
-        document.getElementById('translateForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            
-            const textToTranslate = document.getElementById('textToTranslate').value;
-            const targetLang = document.getElementById('targetLang').value;
-            const sourceLang = document.getElementById('sourceLang').value; // Poate fi gol
-            const resultDiv = document.getElementById('translationResult');
-
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = '<p class="loading">Se traduce...</p>';
-
-            const payload = {
-                text: textToTranslate,
-                to: targetLang
-            };
-            if (sourceLang) {
-                payload.from = sourceLang;
-            }
-
-            try {
-                const response = await fetch('/translate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || `Eroare HTTP: ${response.status}`);
-                }
-                
-                if (data.translatedText) {
-                    resultDiv.innerHTML = `
-                        <p><strong>Text Original:</strong> ${textToTranslate.length > 100 ? textToTranslate.substring(0,100) + '...' : textToTranslate}</p>
-                        <p><strong>Traducere (${data.targetLanguage}):</strong> ${data.translatedText}</p>
-                        <p><small>Limba detectată (sursă): ${data.detectedLanguage || 'N/A'}</small></p>
-                    `;
-                } else if (data.error) {
-                     resultDiv.innerHTML = `<p class="error">Eroare la traducere: ${data.error}</p>`;
-                }
-
-            } catch (error) {
-                resultDiv.innerHTML = `<p class="error">A apărut o eroare: ${error.message}</p>`;
-                console.error('Translation fetch error:', error);
-            }
-        });
-    </script>
 </body>
 </html>
