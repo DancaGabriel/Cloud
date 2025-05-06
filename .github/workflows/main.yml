@@ -38,11 +38,17 @@ jobs:
       uses: azure/webapps-deploy@v3
       with:
         app-name: 'cloud-application' 
-        package: '.' 
+        package: '.'
+     
+        app-settings-json: |
+          [
+            { "name": "TRANSLATOR_API_KEY", "value": "${{ secrets.TRANSLATOR_API_KEY }}", "slotSetting": false },
+            { "name": "TRANSLATOR_API_ENDPOINT", "value": "${{ secrets.TRANSLATOR_API_ENDPOINT }}", "slotSetting": false },
+            { "name": "TRANSLATOR_API_REGION", "value": "${{ secrets.TRANSLATOR_API_REGION }}", "slotSetting": false },
+            { "name": "FLASK_ENV", "value": "production", "slotSetting": false }
+          ]
       
-
     - name: Logout from Azure
       run: |
-        az logout
-        az cache purge
-        az account clear
+        az logout --username ${{ secrets.AZURE_LOGIN_USERNAME_IF_NEEDED_FOR_LOGOUT }} || echo "Logout failed or not applicable"
+    
